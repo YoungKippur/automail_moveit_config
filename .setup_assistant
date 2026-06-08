@@ -1,0 +1,25 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: automail_description
+    relative_path: robots/automail.urdf.xacro
+  srdf:
+    relative_path: config/automail.srdf
+  package_settings:
+    author_name: Marcos Strauss
+    author_email: mstrauss@itba.edu.ar
+    generated_timestamp: 1780926681
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
