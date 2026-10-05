@@ -5,57 +5,109 @@
 
         <ros2_control name="${name}" type="system">
             <hardware>
-                <!-- By default, set up controllers for simulation. This won't work on real hardware -->
+                <!--
+                    Hardware interface real para servos PWM vía Arduino USB.
+                    Para volver a simulación reemplazar por:
+                        <plugin>mock_components/GenericSystem</plugin>
+
+                    Parámetros:
+                      serial_port  → puerto USB del Arduino (verificar con: ls /dev/ttyUSB*)
+                      baud_rate    → debe coincidir con Serial.begin() del sketch (115200)
+
+                    Permisos:
+                      sudo usermod -aG dialout $USER   (requiere re-login)
+                -->
+                <!--
+                <plugin>automail_hardware/AutomailSerialHardware</plugin>
+                <param name="serial_port">/dev/ttyUSB0</param>
+                <param name="baud_rate">115200</param>
+                -->
                 <plugin>mock_components/GenericSystem</plugin>
             </hardware>
+
+            <!--
+                Mapeo servo ID → joint (debe coincidir con SERVO_PINS[] en el .ino):
+                  ID 0 → joint1_base_rotation   (pin 3)
+                  ID 1 → joint2_shoulder_pitch  (pin 5)
+                  ID 2 → joint3_elbow_pitch      (pin 6)
+                  ID 3 → joint4_wrist_roll       (pin 9)
+                  ID 4 → joint5_wrist_pitch      (pin 10)
+                  ID 5 → joint_finger_left       (pin 11)
+                  ID 6 → joint_finger_right      (pin A0)
+
+                servo_min_deg / servo_max_deg: rango físico del servo en grados.
+                Ajustar si el servo no llega a 0° o 180° para evitar forzar los topes.
+            -->
+
             <joint name="joint1_base_rotation">
                 <command_interface name="position"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['joint1_base_rotation']}</param>
                 </state_interface>
                 <state_interface name="velocity"/>
+                <param name="servo_min_deg">0</param>
+                <param name="servo_max_deg">180</param>
             </joint>
+
             <joint name="joint2_shoulder_pitch">
                 <command_interface name="position"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['joint2_shoulder_pitch']}</param>
                 </state_interface>
                 <state_interface name="velocity"/>
+                <param name="servo_min_deg">0</param>
+                <param name="servo_max_deg">180</param>
             </joint>
+
             <joint name="joint3_elbow_pitch">
                 <command_interface name="position"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['joint3_elbow_pitch']}</param>
                 </state_interface>
                 <state_interface name="velocity"/>
+                <param name="servo_min_deg">0</param>
+                <param name="servo_max_deg">180</param>
             </joint>
+
             <joint name="joint4_wrist_roll">
                 <command_interface name="position"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['joint4_wrist_roll']}</param>
                 </state_interface>
                 <state_interface name="velocity"/>
+                <param name="servo_min_deg">0</param>
+                <param name="servo_max_deg">180</param>
             </joint>
+
             <joint name="joint5_wrist_pitch">
                 <command_interface name="position"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['joint5_wrist_pitch']}</param>
                 </state_interface>
                 <state_interface name="velocity"/>
+                <param name="servo_min_deg">0</param>
+                <param name="servo_max_deg">180</param>
             </joint>
+
             <joint name="joint_finger_left">
                 <command_interface name="position"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['joint_finger_left']}</param>
                 </state_interface>
                 <state_interface name="velocity"/>
+                <!-- Gripper: 0° = cerrado, 90° = abierto máximo -->
+                <param name="servo_min_deg">0</param>
+                <param name="servo_max_deg">90</param>
             </joint>
+
             <joint name="joint_finger_right">
                 <command_interface name="position"/>
                 <state_interface name="position">
                   <param name="initial_value">${initial_positions['joint_finger_right']}</param>
                 </state_interface>
                 <state_interface name="velocity"/>
+                <param name="servo_min_deg">0</param>
+                <param name="servo_max_deg">90</param>
             </joint>
 
         </ros2_control>
